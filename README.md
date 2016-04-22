@@ -28,3 +28,25 @@ $ vagrant box list
 ```bash
 $ vagrant up
 ```
+
+sshコマンドがインストールされている環境では `vagrant ssh` を  
+そうでない場合は任意のsshクライアントアプリケーションを使用して仮想マシンにログインする。
+
+|IP|port|
+|:--|:--|
+|localhost(127.0.0.1)|2222|
+
+仮想マシンのユーザ情報は以下の通り。
+
+|User|Pass|
+|:--|:--|
+|vagrant|vagrant|
+|root|vagrant|
+
+次回以降のログインはprivate keyを作成するなどでユーザ情報の入力を省けるようにしてもよい。
+
+仮想マシンを終了する場合は以下のコマンドを実行する。
+
+```bash
+$ vagrant halt
+```
