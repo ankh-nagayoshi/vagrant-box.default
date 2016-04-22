@@ -4,7 +4,7 @@
 
 ## Usage
 
-> 予め Virtual Box, Vagrant をインストールしておくこと。
+> 予め [Virtual Box](https://www.virtualbox.org/), [Vagrant](https://www.vagrantup.com/) をインストールしておくこと。
 
 [リリース一覧](../../releases) から該当のリリースをえらんで、ファイルをダウンロードする。  
 
