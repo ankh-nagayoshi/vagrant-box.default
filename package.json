@@ -1,0 +1,15 @@
+{
+    "description": "Default package from CentOS6.5",
+    "short_description": "Default",
+    "name": "Default",
+    "versions": [{
+        "version": "0.1.2",
+        "status": "active",
+        "description_html": "<p>Default package from CentOS6.5</p>",
+        "description_markdown": "Default package from CentOS6.5",
+        "providers": [{
+            "name": "github.com",
+            "url": "https:\/\/github.com/ankh-nagayoshi/vagrant-box.default/releases/download/v0.1.2/package.box"
+        }]
+    }]
+}
