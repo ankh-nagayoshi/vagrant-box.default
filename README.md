@@ -105,3 +105,82 @@ $ bundle install
 # インストールディレクトリを指定する場合
 $ bundle install --path=~/vendor/bundle
 ```
+
+## Tips
+
+### rails
+
+#### environment
+
+起動する環境モードが固定されている場合は  
+`~/.bash_profile`などで環境変数`RAILS_ENV`を追加しておくとよい。  
+
+```bash
+$ echo export RAILS_ENV=production >> ~/.bash_profile
+$ source ~/.bash_profile
+# 確認
+$ echo $RAILS_ENV
+# => production
+```
+
+#### WEBrickを使ったSSL
+
+証明書を発行する。  
+
+```bash
+$ mkdir ~/.ssl
+$ openssl req -new -newkey rsa:2048 -sha1 -days 365 -nodes -x509 -keyout ~/.ssl/localhost.key -out ~/.ssl/localhost.crt
+```
+
+`config/ssl.rb`を作成し、以下の内容を記述する。  
+ポート番号の重複を回避するため、`Port`は33000を設定する。  
+（`Vagrantfile`の`forwarded_port`も設定しておく）
+
+```ruby
+require 'rubygems'
+require 'rails/commands/server'
+require 'rack'
+require 'webrick'
+require 'webrick/https'
+
+module Rails
+  class Server < ::Rack::Server
+    def default_options 
+      super.merge({
+        Port: 33000,
+        SSLEnable: true,
+        SSLVerifyClient: OpenSSL::SSL::VERIFY_NONE,
+        SSLPrivateKey: OpenSSL::PKey::RSA.new(File.open("#{ENV["HOME"]}/.ssl/localhost.key").read),
+        SSLCertificate: OpenSSL::X509::Certificate.new(File.open("#{ENV["HOME"]}/.ssl/localhost.crt").read),
+        SSLCertName: [["CN", WEBrick::Utils::getservername]],
+      })
+    end
+  end
+end
+```
+
+`bin/rails`をコピーし、`bin/rails-ssl`を作成する。  
+
+```bash
+$ cp bin/rails bin/rails-ssl
+```
+
+テキストエディタで`bin/rails-ssl`を開き、以下のように変更する。  
+
+```ruby
+#!/usr/bin/env ruby
+# ↑"ruby.exe"となっている場合があるので修正しておく
+
+# 以下の行を追加する
+require_relative '../config/ssl' 
+
+APP_PATH = File.expand_path('../../config/application',  __FILE__)
+require_relative '../config/boot'
+require 'rails/commands'
+```
+
+以下のコマンドでサーバを開始する。  
+
+```bash
+$ bundle exec bin/rails-ssl s -b 0.0.0.0
+```
