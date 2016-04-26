@@ -71,3 +71,37 @@ $ vagrant halt
 |2222|22|ssh|
 |8080|80|httpd|
 |3030|3000|webrick(rails)|
+
+## Warning
+
+### rails
+
+#### ウェブサーバ
+
+railsアプリケーションをwebrick以外のwebサーバで動作させたい場合は  
+追加で以下のようなアプリケーションを選択してインストールする。  
+
+- phusion passenger(with httpd)
+- nginx and unicorn
+- puma
+
+#### bundler
+
+`bundle install`する場合は共有ディレクトリ（/vagrant）にインストールしてはならない。  
+（インストールに失敗するgemが出てくる）  
+
+従って以下のコマンドのオプション指定は **間違い** となる。  
+
+```bash
+$ bundle install --path=vendor/bundle
+```
+
+正しくは以下のようにオプションを指定して実行する。  
+（パスの指定は共有ディレクトリでなければどこでもよい）
+
+```bash
+# グローバルにインストールする場合
+$ bundle install
+# インストールディレクトリを指定する場合
+$ bundle install --path=~/vendor/bundle
+```
